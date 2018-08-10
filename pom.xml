@@ -8,7 +8,6 @@
     <artifactId>sim-2018</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>sim-2018-executable</name>
 
     <build>
         <plugins>
