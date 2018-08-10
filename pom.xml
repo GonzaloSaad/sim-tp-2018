@@ -11,7 +11,6 @@
     <name>sim-2018-executable</name>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -73,9 +72,6 @@
             <artifactId>log4j-core</artifactId>
             <version>2.11.1</version>
         </dependency>
-
-
-
     </dependencies>
 
 </project>

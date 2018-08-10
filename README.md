@@ -11,16 +11,18 @@ Aca deberia aparecer un archivo pom.xml en la raiz del projecto
 4. Para editar los archivos FXML, vincular IntelliJ a SceneBuilder. 
 - Instalar Scene Builder.
 - File -> Settings -> Languages & Frameworks -> JavaFX
-- Señale el archivo exe.
-- Para usar: haga clic con el botón derecho en el archivo FXML y 
+- Señalar el archivo exe.
+- Para usar: hacer click con el botón derecho en el archivo FXML y 
 seleccione "Abrir en SceneBuilder" (muy abajo en la parte inferior)
 
+Mas info: 
+https://stackoverflow.com/questions/30488223/how-to-create-a-javafx-maven-project-in-intellij-idea
 
 ### Buildear el proyecto. (Maven 3.5.4)
 
 En la consola: 
 ```
-maven clean install
+mvn clean install
 ```
 
 ### Ejecutar el programa
