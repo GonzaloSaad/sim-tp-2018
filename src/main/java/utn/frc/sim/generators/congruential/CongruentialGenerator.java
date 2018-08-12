@@ -1,5 +1,6 @@
 package utn.frc.sim.generators.congruential;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,11 @@ public class CongruentialGenerator implements Congruential {
 
     @Override
     public int next() {
-        x = (c + a * x) % m;
+        x = BigInteger
+                .valueOf(c + a * x)
+                .mod(BigInteger.valueOf(m))
+                .intValue();
+
         return x;
     }
 
@@ -68,6 +73,11 @@ public class CongruentialGenerator implements Congruential {
     @Override
     public int getSeed() {
         return seed;
+    }
+
+    @Override
+    public void restart() {
+        x = seed;
     }
 
     @Override

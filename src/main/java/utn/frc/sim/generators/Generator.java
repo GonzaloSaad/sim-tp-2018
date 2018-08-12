@@ -9,4 +9,5 @@ public interface Generator {
     double random();
     List<Double> random(int n);
     int getSeed();
+    void restart();
 }
