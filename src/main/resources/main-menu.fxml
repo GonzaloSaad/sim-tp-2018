@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.views.menu.MainMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.views.menu.MainMenuController">
     
    <children>
-      <MenuBar prefHeight="25.0" prefWidth="600.0">
+      <MenuBar prefHeight="25.0" prefWidth="1024.0">
         <menus>
           <Menu mnemonicParsing="false" text="Generadores">
             <items>
@@ -19,9 +19,10 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Pane fx:id="mainPane" layoutY="25.0" prefHeight="377.0" prefWidth="600.0">
+      <Pane fx:id="mainPane" layoutY="25.0" prefHeight="528.0" prefWidth="1024.0" />
+      <Pane layoutY="551.0" prefHeight="25.0" prefWidth="1024.0" style="-fx-background-color: #d7e1f2;">
          <children>
-            <Label layoutX="509.0" layoutY="336.0" text="Base project" />
+            <Label layoutX="950.0" layoutY="3.0" text="Base project" />
          </children>
       </Pane>
    </children>
