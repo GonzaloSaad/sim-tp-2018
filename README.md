@@ -1,5 +1,5 @@
 # SIMULACION 2018
-[![Build Status](http://circleci-badges-max.herokuapp.com/img/GonzaloSaad/sim-tp-2018?token=)](https://circleci.com/gh/GonzaloSaad/sim-tp-2018)
+[![Build Status](https://circleci.com/gh/GonzaloSaad/sim-tp-2018.png?circle-token=:circle-token)](https://circleci.com/gh/GonzaloSaad/sim-tp-2018)
 
 
 ### Crear un proyecto de IntelliJ con JavaFX y Maven
