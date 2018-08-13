@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 
-
-<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="utn.frc.sim.controller.MainMenuController">
-   <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.views.menu.MainMenuController">
+    
    <children>
-      <Pane prefHeight="480.0" prefWidth="683.0">
+      <MenuBar prefHeight="25.0" prefWidth="600.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Generadores">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#openListGeneratorDialog" text="Lista Aleatoria..." />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Pane fx:id="mainPane" layoutY="25.0" prefHeight="377.0" prefWidth="600.0">
          <children>
-            <Label layoutX="588.0" layoutY="439.0" text="base project" />
+            <Label layoutX="509.0" layoutY="336.0" text="Base project" />
          </children>
       </Pane>
    </children>
-</GridPane>
+</AnchorPane>
