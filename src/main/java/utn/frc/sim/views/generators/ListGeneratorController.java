@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import utn.frc.sim.generators.Generator;
 import utn.frc.sim.generators.congruential.Congruential;
 import utn.frc.sim.generators.congruential.CongruentialGenerator;
@@ -126,11 +127,30 @@ public class ListGeneratorController {
         listItems.getItems().clear();
     }
 
-    private void updateStatusOfTxtFieldUponChkClick(){
+    private void clearTxts() {
+        txtA.setText(Strings.EMPTY);
+        txtC.setText(Strings.EMPTY);
+        txtM.setText(Strings.EMPTY);
+        txtSeed.setText(Strings.EMPTY);
+    }
+
+    private void defaultTxts() {
+        setDefaultValueToTxtA();
+        setDefaultValueToTxtC();
+        setDefaultValueToTxtM();
+        setDefaultValueToTxtSeed();
+    }
+
+    private void updateStatusOfTxtFieldUponChkClick() {
+        if (chkDefault.isSelected()) {
+            defaultTxts();
+        } else {
+            clearTxts();
+        }
         setStatusOfTxtFields(chkDefault.isSelected());
     }
 
-    private void setStatusOfTxtFields(boolean status){
+    private void setStatusOfTxtFields(boolean status) {
         txtA.setDisable(status);
         txtC.setDisable(status);
         txtM.setDisable(status);
@@ -142,6 +162,7 @@ public class ListGeneratorController {
             return Integer.parseInt(txtA.getText());
         } catch (Exception e) {
             logger.error("Error getting A. Returning default.");
+            setDefaultValueToTxtA();
             return Congruential.DEFAULT_A;
         }
     }
@@ -151,6 +172,7 @@ public class ListGeneratorController {
             return Integer.parseInt(txtC.getText());
         } catch (Exception e) {
             logger.error("Error getting C. Returning mixed default.");
+            setDefaultValueToTxtC();
             return Congruential.MIXED_CG_DEFAULT_C;
         }
     }
@@ -160,6 +182,7 @@ public class ListGeneratorController {
             return Integer.parseInt(txtM.getText());
         } catch (Exception e) {
             logger.error("Error getting M. Returning default.");
+            setDefaultValueToTxtM();
             return Congruential.DEFAULT_M;
         }
 
@@ -170,7 +193,24 @@ public class ListGeneratorController {
             return Integer.parseInt(txtSeed.getText());
         } catch (Exception e) {
             logger.error("Error getting seed. Returning default.");
+            setDefaultValueToTxtSeed();
             return Congruential.DEFAULT_SEED;
         }
+    }
+
+    private void setDefaultValueToTxtA() {
+        txtA.setText(Integer.toString(Congruential.DEFAULT_A));
+    }
+
+    private void setDefaultValueToTxtC() {
+        txtC.setText(Integer.toString(Congruential.MIXED_CG_DEFAULT_C));
+    }
+
+    private void setDefaultValueToTxtM() {
+        txtM.setText(Integer.toString(Congruential.DEFAULT_M));
+    }
+
+    private void setDefaultValueToTxtSeed() {
+        txtSeed.setText(Integer.toString(Congruential.DEFAULT_SEED));
     }
 }
