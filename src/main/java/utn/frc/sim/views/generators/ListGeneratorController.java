@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
-import utn.frc.sim.generators.Generator;
+import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.congruential.Congruential;
 import utn.frc.sim.generators.congruential.CongruentialGenerator;
 import utn.frc.sim.util.MathUtils;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class ListGeneratorController {
 
-    private static Generator generator;
+    private static RandomGenerator generator;
     private static Logger logger = LogManager.getLogger(ListGeneratorController.class);
 
     @FXML
@@ -82,7 +82,7 @@ public class ListGeneratorController {
 
     private void generateNumbersAndSetToList() {
         createGenerator();
-        Generator generator = getGenerator();
+        RandomGenerator generator = getGenerator();
 
         List<Double> numbers = generator
                 .random(20)
@@ -115,7 +115,7 @@ public class ListGeneratorController {
         }
     }
 
-    private Generator getGenerator() {
+    private RandomGenerator getGenerator() {
         if (generator == null) {
             createGenerator();
         }

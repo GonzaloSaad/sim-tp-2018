@@ -15,6 +15,7 @@
           <Menu mnemonicParsing="false" text="Generadores">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#openListGeneratorDialog" text="Lista Aleatoria..." />
+                  <MenuItem mnemonicParsing="false" onAction="#openChiCuadradoDialog" text="Chi Cuadrado..." />
             </items>
           </Menu>
         </menus>

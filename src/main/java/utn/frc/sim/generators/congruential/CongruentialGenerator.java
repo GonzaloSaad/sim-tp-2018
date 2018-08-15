@@ -40,17 +40,18 @@ public class CongruentialGenerator implements Congruential {
 
     @Override
     public int next() {
+        int xn = x;
         x = BigInteger
                 .valueOf(c + a * x)
                 .mod(BigInteger.valueOf(m))
                 .intValue();
 
-        return x;
+        return xn;
     }
 
     @Override
     public List<Integer> next(int amount) {
-        List<Integer> generatedNumbers = new ArrayList<Integer>();
+        List<Integer> generatedNumbers = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             generatedNumbers.add(next());
         }
