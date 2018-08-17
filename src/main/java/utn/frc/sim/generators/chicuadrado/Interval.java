@@ -49,15 +49,15 @@ public class Interval {
         this.expectedFrequency = expectedFrequency;
     }
 
-    public boolean includes(double number){
+    public boolean includes(double number) {
         return from <= number && number < to;
     }
 
-    public void addOccurrence(){
+    public void addOccurrence() {
         observedFrequency++;
     }
 
-    public String displayName(){
+    public String displayName() {
         return getDisplay(from) + "-" + getDisplay(to);
     }
 
@@ -71,13 +71,25 @@ public class Interval {
                 '}';
     }
 
-    public String getDisplay(double number){
+    public String getDisplay(double number) {
         return StringUtils
-                .rightPad(getDoubleString(number),6,'0');
+                .rightPad(getDoubleString(number), 6, '0');
 
     }
 
-    private String getDoubleString(double number){
-        return Double.toString((MathUtils.round(number,4)));
+    private String getDoubleString(double number) {
+        return Double.toString((MathUtils.round(number, 4)));
+    }
+
+    public double getResult() {
+        return Math.pow(observedFrequency - expectedFrequency, 2) / expectedFrequency;
+    }
+
+    public String getDisplayableResult(){
+        return getDisplay(getResult());
+    }
+
+    public String getPlottableInterval(){
+        return getDisplay((from + to)/2);
     }
 }
