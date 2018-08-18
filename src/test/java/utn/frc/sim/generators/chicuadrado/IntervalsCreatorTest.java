@@ -17,20 +17,20 @@ public class IntervalsCreatorTest {
 
     @Test
     public void testJava() throws IntervalNotDivisibleException {
-        creator = new IntervalsCreator(NUMBERS, INTERVALS, IntervalsCreator.GeneratorType.JAVA_NATIVE);
+        creator = IntervalsCreator.createFor(NUMBERS, INTERVALS, IntervalsCreator.GeneratorType.JAVA_NATIVE);
         creator.getIntervals()
                 .forEach(interval -> assertEquals(interval.getExpectedFrequency(), NUMBERS / INTERVALS));
     }
 
     @Test
     public void testCongruential() throws IntervalNotDivisibleException {
-        creator = new IntervalsCreator(NUMBERS, INTERVALS, IntervalsCreator.GeneratorType.CONGRUENTIAL);
+        creator = IntervalsCreator.createFor(NUMBERS, INTERVALS, IntervalsCreator.GeneratorType.CONGRUENTIAL);
         creator.getIntervals()
                 .forEach(interval -> assertEquals(interval.getExpectedFrequency(), NUMBERS / INTERVALS));
     }
 
     @Test(expected = IntervalNotDivisibleException.class)
     public void testIntervalNotDivisible() throws IntervalNotDivisibleException {
-        creator = new IntervalsCreator(NUMBERS_FOR_FAIL, INTERVALS, IntervalsCreator.GeneratorType.CONGRUENTIAL);
+        creator = IntervalsCreator.createFor(NUMBERS_FOR_FAIL, INTERVALS, IntervalsCreator.GeneratorType.CONGRUENTIAL);
     }
 }
