@@ -26,14 +26,24 @@ public class CongruentialGenerator implements Congruential {
         this(DEFAULT_A, DEFAULT_M, c, DEFAULT_SEED);
     }
 
+    /**
+     * Metodo que intancia a la clase con los valores necesarios.
+     * Patron factory method.
+     */
     public static CongruentialGenerator createOf(int a, int m, int c, int seed) {
         return new CongruentialGenerator(a, m, c, seed);
     }
 
+    /**
+     * Metodo que crea una instancia con valores por defecto para mixto.
+     */
     public static CongruentialGenerator defaultMixed() {
         return new CongruentialGenerator(MIXED_CG_DEFAULT_C);
     }
 
+    /**
+     * Metodo que crea una instancia con valores por defecto para multiplicativo.
+     */
     public static CongruentialGenerator defaultMultiplicative() {
         return new CongruentialGenerator(MULTIPLICATIVE_CG_DEFAULT_C);
     }
