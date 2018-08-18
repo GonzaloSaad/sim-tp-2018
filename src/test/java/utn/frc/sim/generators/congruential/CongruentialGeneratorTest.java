@@ -1,4 +1,4 @@
-package utn.frc.sim.generators;
+package utn.frc.sim.generators.congruential;
 
 import org.junit.Test;
 import utn.frc.sim.generators.congruential.Congruential;
@@ -17,7 +17,7 @@ public class CongruentialGeneratorTest {
         Numbers created with: https://www.mathcelebrity.com/linear-congruential-generator-calculator.php
      */
 
-    private static Integer[] mixed = new Integer[]{10, 73, 19, 37, 64, 55,
+    private static Integer[] mixed = new Integer[]{1, 10, 73, 19, 37, 64, 55,
             91, 46, 28, 1, 10, 73, 19, 37, 64, 55, 91, 46, 28, 1, 10, 73, 19,
             37, 64, 55, 91, 46, 28, 1, 10, 73, 19, 37, 64, 55, 91, 46, 28, 1,
             10, 73, 19, 37, 64, 55, 91, 46, 28, 1, 10, 73, 19, 37, 64, 55, 91,
@@ -25,7 +25,7 @@ public class CongruentialGeneratorTest {
             64, 55, 91, 46, 28, 1, 10, 73, 19, 37, 64, 55, 91, 46, 28, 1, 10,
             73, 19, 37, 64, 55, 91, 46};
 
-    private static Integer[] multiplicative = new Integer[]{7, 49, 46, 25, 76, 37, 61,
+    private static Integer[] multiplicative = new Integer[]{1, 7, 49, 46, 25, 76, 37, 61,
             31, 19, 34, 40, 82, 79, 58, 10, 70, 94, 64, 52, 67, 73, 16, 13, 91, 43, 4, 28, 97, 85, 1,
             7, 49, 46, 25, 76, 37, 61, 31, 19, 34, 40, 82, 79, 58, 10, 70, 94, 64, 52, 67, 73, 16, 13,
             91, 43, 4, 28, 97, 85, 1, 7, 49, 46, 25, 76, 37, 61, 31, 19, 34, 40, 82, 79, 58, 10, 70, 94,

@@ -4,7 +4,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="528.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.views.generators.ListGeneratorController">
@@ -15,12 +15,12 @@
       <Label alignment="CENTER_RIGHT" layoutX="76.0" layoutY="97.0" prefHeight="17.0" prefWidth="39.0" text="c:" />
       <Label alignment="CENTER_RIGHT" layoutX="76.0" layoutY="125.0" prefHeight="17.0" prefWidth="39.0" text="m:" />
       <Label alignment="CENTER_RIGHT" layoutX="76.0" layoutY="154.0" prefHeight="17.0" prefWidth="39.0" text="seed:" textAlignment="RIGHT" />
-      <TextField fx:id="txtA" layoutX="126.0" layoutY="64.0" prefHeight="25.0" prefWidth="147.0" />
-      <TextField fx:id="txtC" layoutX="126.0" layoutY="93.0" prefHeight="25.0" prefWidth="147.0" />
-      <TextField fx:id="txtM" layoutX="126.0" layoutY="121.0" prefHeight="25.0" prefWidth="147.0" />
-      <TextField fx:id="txtSeed" layoutX="126.0" layoutY="150.0" prefHeight="25.0" prefWidth="147.0" />
       <Button fx:id="btnGenerar" layoutX="207.0" layoutY="188.0" mnemonicParsing="false" onAction="#btnGenerarClick" prefHeight="25.0" prefWidth="66.0" text="Generar" />
       <CheckBox fx:id="chkDefault" layoutX="126.0" layoutY="192.0" mnemonicParsing="false" onAction="#chkDefaultClick" text="Default" />
-      <Button fx:id="btnReset" layoutX="484.0" layoutY="471.0" mnemonicParsing="false" onAction="#btnResetClick" prefHeight="25.0" prefWidth="73.0" text="Limpiar" />
+      <Button fx:id="btnLimpiar" layoutX="484.0" layoutY="471.0" mnemonicParsing="false" onAction="#btnLimpiarClick" prefHeight="25.0" prefWidth="73.0" text="Limpiar" />
+      <Spinner fx:id="spnA" editable="true" layoutX="126.0" layoutY="64.0" />
+      <Spinner fx:id="spnC" editable="true" layoutX="126.0" layoutY="93.0" />
+      <Spinner fx:id="spnM" editable="true" layoutX="126.0" layoutY="121.0" />
+      <Spinner fx:id="spnSeed" editable="true" layoutX="126.0" layoutY="150.0" />
    </children>
 </AnchorPane>

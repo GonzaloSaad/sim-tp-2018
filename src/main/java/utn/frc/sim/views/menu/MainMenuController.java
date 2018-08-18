@@ -26,12 +26,24 @@ public class MainMenuController {
         setListGeneratorDialog();
     }
 
+    @FXML
+    void openChiCuadradoDialog(ActionEvent event) {
+        setChiCuadradoDialog();
+    }
 
     private void setListGeneratorDialog(){
         try {
             mainPane.getChildren().setAll((AnchorPane)FXMLLoader.load(getClass().getResource("/number-generator.fxml")));
         } catch (IOException e) {
-            logger.error("Problem opening.",e);
+            logger.error("Problem opening list generator.",e);
+        }
+    }
+
+    private void setChiCuadradoDialog(){
+        try {
+            mainPane.getChildren().setAll((AnchorPane)FXMLLoader.load(getClass().getResource("/chi-cuadrado-test.fxml")));
+        } catch (IOException e) {
+            logger.error("Problem opening chi cuadrado.",e);
         }
     }
 
