@@ -43,7 +43,6 @@ public class IntervalsCreator {
         }
     }
 
-
     private RandomGenerator getGenerator(GeneratorType type) {
 
         if (type == GeneratorType.JAVA_NATIVE) {

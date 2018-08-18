@@ -6,14 +6,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="528.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utn.frc.sim.views.generators.ChiCuadradoTestController">
    <children>
-      <BarChart fx:id="grpGraficoDeFrecuencias" layoutX="408.0" layoutY="143.0" prefHeight="375.0" prefWidth="587.0">
+      <BarChart fx:id="grpGraficoDeFrecuencias" layoutX="408.0" layoutY="24.0" prefHeight="457.0" prefWidth="587.0" title="Frecuencias de Intervalos">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -21,19 +21,25 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
-      <TextField fx:id="txtCantDeNum" layoutX="119.0" layoutY="33.0" prefHeight="25.0" prefWidth="106.0" />
-      <TextField fx:id="txtIntervalos" layoutX="119.0" layoutY="63.0" prefHeight="25.0" prefWidth="106.0" />
-      <Button fx:id="btnGenerar" layoutX="426.0" layoutY="93.0" mnemonicParsing="false" onAction="#btnGenerarClick" text="Generar" />
+      <Button fx:id="btnGenerar" layoutX="210.0" layoutY="170.0" mnemonicParsing="false" onAction="#btnGenerarClick" text="Generar" />
       <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="37.0" prefHeight="17.0" prefWidth="90.0" text="Cant. de Num.:" />
       <Label alignment="CENTER_RIGHT" layoutX="47.0" layoutY="67.0" prefHeight="17.0" prefWidth="65.0" text="Intervalos:" />
-      <Label alignment="CENTER_RIGHT" layoutX="236.0" layoutY="37.0" prefHeight="17.0" prefWidth="90.0" text="Tipo de prueba:" />
-      <Label alignment="CENTER_RIGHT" layoutX="261.0" layoutY="67.0" prefHeight="17.0" prefWidth="65.0" text="Generador: " />
-      <ComboBox fx:id="cmbTipoDePrueba" layoutX="335.0" layoutY="33.0" prefWidth="150.0" />
-      <ComboBox fx:id="cmbGenerador" layoutX="335.0" layoutY="63.0" prefWidth="150.0" />
-      <TitledPane fx:id="paneTablePanel" layoutX="35.0" layoutY="164.0" prefHeight="200.0" prefWidth="354.0" text="Tabla de Chicuadrado">
+      <Label alignment="CENTER_RIGHT" layoutX="47.0" layoutY="144.0" prefHeight="17.0" prefWidth="65.0" text="Generador: " />
+      <ComboBox fx:id="cmbGenerador" layoutX="119.0" layoutY="140.0" prefWidth="150.0" />
+      <TitledPane fx:id="paneTablePanel" layoutX="33.0" layoutY="221.0" prefHeight="200.0" prefWidth="364.0" text="Tabla de Chi Cuadrado">
          <content>
-            <VBox prefHeight="200.0" prefWidth="100.0" />
+            <VBox prefHeight="174.0" prefWidth="377.0" />
          </content>
       </TitledPane>
+      <Label layoutX="253.0" layoutY="432.0" text="Suma:" />
+      <Label fx:id="lblSumaDeResultado" alignment="CENTER_RIGHT" layoutX="306.0" layoutY="432.0" prefHeight="17.0" prefWidth="80.0" />
+      <Label layoutX="157.0" layoutY="449.0" text="Chi Cuadrado esperado:" />
+      <Label fx:id="lblChiEsperado" alignment="CENTER_RIGHT" layoutX="306.0" layoutY="449.0" prefHeight="17.0" prefWidth="80.0" />
+      <Label layoutX="232.0" layoutY="466.0" text="Hipotesis:" />
+      <Label fx:id="lblResultado" alignment="CENTER_RIGHT" layoutX="306.0" layoutY="466.0" prefHeight="17.0" prefWidth="80.0" />
+      <Spinner fx:id="spnAmountOfNumbers" editable="true" layoutX="121.0" layoutY="33.0" />
+      <Spinner fx:id="spnAmountOfIntervals" editable="true" layoutX="121.0" layoutY="63.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="46.0" layoutY="98.0" prefHeight="17.0" prefWidth="65.0" text="Alfa:" />
+      <Spinner fx:id="spnAlpha" editable="true" layoutX="120.0" layoutY="94.0" />
    </children>
 </AnchorPane>
