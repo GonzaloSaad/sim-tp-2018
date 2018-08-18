@@ -38,6 +38,13 @@ public class CongruentialGenerator implements Congruential {
         return new CongruentialGenerator(MULTIPLICATIVE_CG_DEFAULT_C);
     }
 
+    /**
+     * Metodo que realiza el calculo de un generador
+     * pseudoaleatorio congruencial.
+     * x = (a * xn + c) % m
+     * La serie a generar debe comenzar por la semilla
+     * por eso se retorna el valor viejo (xn).
+     */
     @Override
     public int next() {
         int xn = x;
@@ -49,6 +56,10 @@ public class CongruentialGenerator implements Congruential {
         return xn;
     }
 
+    /**
+     * Metodo que genera una cantidad 'amount' de
+     * numeros pseudoaleatorios.
+     */
     @Override
     public List<Integer> next(int amount) {
         List<Integer> generatedNumbers = new ArrayList<>();
@@ -58,11 +69,20 @@ public class CongruentialGenerator implements Congruential {
         return generatedNumbers;
     }
 
+    /**
+     * Metodo que genera un numero pseudoaleatorio
+     * entre 0 y 1.
+     * Intervalo -> [0,1)
+     */
     @Override
     public double random() {
         return normalize(next());
     }
 
+    /**
+     * Metodo que genera una cantidad 'n' de
+     * numeros pseudoaleatorios.
+     */
     @Override
     public List<Double> random(int n) {
         return next(n)
@@ -91,6 +111,11 @@ public class CongruentialGenerator implements Congruential {
         return c != 0;
     }
 
+    /**
+     * Metodo que convierte un numero entero
+     * generado por la serie a un valor
+     * del intervalo [0,1)
+     */
     private double normalize(int n) {
         return (double) n / (double) m;
     }

@@ -43,7 +43,7 @@ public class ChiCuadradoTestController {
     private static final double SPINNER_DOUBLE_MAX_VALUE = 1;
     private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.10;
     private static final double SPINNER_DOUBLE_STEP_VALUE = 0.05;
-    public static final int PLACES = 4;
+    private static final int PLACES = 4;
 
 
     private TableView<Interval> tblIntervalTable;
