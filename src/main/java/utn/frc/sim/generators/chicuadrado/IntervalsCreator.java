@@ -1,6 +1,7 @@
 package utn.frc.sim.generators.chicuadrado;
 
 import utn.frc.sim.generators.RandomGenerator;
+import utn.frc.sim.generators.chicuadrado.exceptions.IntervalNotDivisibleException;
 import utn.frc.sim.generators.congruential.CongruentialGenerator;
 import utn.frc.sim.generators.javanative.JavaGenerator;
 
@@ -13,14 +14,14 @@ public class IntervalsCreator {
     private List<Interval> intervals;
     private static final double TOP_VALUE = 0.9999;
 
-    public IntervalsCreator(int amountOfNumbers, int amountOfIntervals, GeneratorType type) {
+    public IntervalsCreator(int amountOfNumbers, int amountOfIntervals, GeneratorType type) throws IntervalNotDivisibleException {
         createIntervals(amountOfIntervals, amountOfNumbers, type);
     }
 
-    private void createIntervals(int amountOfIntervals, int amountOfNumbers, GeneratorType type) {
+    private void createIntervals(int amountOfIntervals, int amountOfNumbers, GeneratorType type) throws IntervalNotDivisibleException {
 
         if (amountOfNumbers % amountOfIntervals != 0) {
-            throw new IllegalArgumentException();
+            throw new IntervalNotDivisibleException();
         }
 
         RandomGenerator generator = getGenerator(type);

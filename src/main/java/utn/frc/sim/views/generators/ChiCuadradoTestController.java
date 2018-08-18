@@ -13,12 +13,15 @@ import javafx.scene.control.*;
 import utn.frc.sim.generators.chicuadrado.Interval;
 import utn.frc.sim.generators.chicuadrado.IntervalsCreator;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import utn.frc.sim.generators.chicuadrado.exceptions.IntervalNotDivisibleException;
+import utn.frc.sim.util.MathUtils;
 
 
 import java.util.List;
 
 public class ChiCuadradoTestController {
 
+    private static final String ALERT_NOT_DIVISIBLE = "La cantidad de numeros debe ser divisible por la cantidad de intervalos.";
     private static final String EXPECTED_SERIES_LABEL = "Esperada.";
     private static final String OBSERVED_SERIES_LABEL = "Observada.";
     private static final String X_AXIS_LABEL = "Intervalos.";
@@ -32,14 +35,15 @@ public class ChiCuadradoTestController {
     private static final String COMBO_BOX_JAVA_NATIVE = "Nativo (Java)";
     private static final String COMBO_BOX_CONGRUENTIAL = "Congruencial";
     private static final int COMBO_BOX_FIRST_ELEMTENT = 0;
-    private static final int SPINNER_INTEGER_MIN_VALUE = 1;
+    private static final int SPINNER_INTEGER_MIN_VALUE = 2;
     private static final int SPINNER_INTEGER_MAX_VALUE = Integer.MAX_VALUE;
     private static final int SPINNER_NO_INCREMENT_STEP = 0;
 
-    private static final double SPINNER_DOUBLE_MIN_VALUE = 0;
+    private static final double SPINNER_DOUBLE_MIN_VALUE = 0.0001;
     private static final double SPINNER_DOUBLE_MAX_VALUE = 1;
     private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.10;
     private static final double SPINNER_DOUBLE_STEP_VALUE = 0.05;
+    public static final int PLACES = 4;
 
 
     private TableView<Interval> tblIntervalTable;
@@ -85,7 +89,7 @@ public class ChiCuadradoTestController {
 
 
     private void initializeFrequencyBarChartGraph() {
-        //grpGraficoDeFrecuencias.setAnimated(false);
+        grpGraficoDeFrecuencias.setAnimated(false);
         grpGraficoDeFrecuencias.getXAxis().setAnimated(Boolean.FALSE);
         grpGraficoDeFrecuencias.getYAxis().setAnimated(Boolean.FALSE);
         grpGraficoDeFrecuencias.getXAxis().setLabel(X_AXIS_LABEL);
@@ -153,10 +157,16 @@ public class ChiCuadradoTestController {
     }
 
     private void generateIntervalsAndPublishToTableViewAndGraph() {
-        ObservableList<Interval> list = getIntervals();
-        setItemsInTableView(list);
-        plotIntervalsInGraph(list);
-        setResultsLabels(list);
+        try{
+            ObservableList<Interval> list = getIntervals();
+            setItemsInTableView(list);
+            plotIntervalsInGraph(list);
+            setResultsLabels(list);
+        } catch (IntervalNotDivisibleException e){
+            Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_NOT_DIVISIBLE, ButtonType.OK);
+            alert.showAndWait();
+        }
+
     }
 
     private void setItemsInTableView(ObservableList<Interval> listOfIntervals) {
@@ -183,10 +193,10 @@ public class ChiCuadradoTestController {
     private void setResultsLabels(List<Interval> listOfIntervals) {
 
         double result = listOfIntervals.stream().mapToDouble(Interval::getResult).sum();
-        lblSumaDeResultado.setText(Double.toString(result));
+        lblSumaDeResultado.setText(Double.toString(MathUtils.round(result, PLACES)));
 
         double chisquared = getChiSquaredTableValueFromParameters();
-        lblChiEsperado.setText(Double.toString(chisquared));
+        lblChiEsperado.setText(Double.toString(MathUtils.round(chisquared, PLACES)));
 
         lblResultado.setText(result < chisquared ? HO_ACEPTED : HO_REJECTED);
     }
@@ -198,12 +208,12 @@ public class ChiCuadradoTestController {
 
     }
 
-    private ObservableList<Interval> getIntervals() {
+    private ObservableList<Interval> getIntervals() throws IntervalNotDivisibleException {
         IntervalsCreator intervalsCreator = createIntervalCreatorFromParameters();
         return FXCollections.observableArrayList(intervalsCreator.getIntervals());
     }
 
-    private IntervalsCreator createIntervalCreatorFromParameters() {
+    private IntervalsCreator createIntervalCreatorFromParameters() throws IntervalNotDivisibleException {
         int amountOfNumbers = spnAmountOfNumbers.getValue();
         int amountOfIntervals = spnAmountOfIntervals.getValue();
 
@@ -215,7 +225,7 @@ public class ChiCuadradoTestController {
 
     private IntervalsCreator buildIntervalsCreator(int amountOfNumbers,
                                                    int amountOfIntervals,
-                                                   IntervalsCreator.GeneratorType type) {
+                                                   IntervalsCreator.GeneratorType type) throws IntervalNotDivisibleException {
 
         return new IntervalsCreator(amountOfNumbers, amountOfIntervals, type);
     }

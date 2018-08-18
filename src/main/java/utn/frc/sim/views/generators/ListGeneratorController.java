@@ -1,15 +1,12 @@
 package utn.frc.sim.views.generators;
 
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
 import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.congruential.Congruential;
 import utn.frc.sim.generators.congruential.CongruentialGenerator;
@@ -22,6 +19,13 @@ public class ListGeneratorController {
 
     private static RandomGenerator generator;
     private static Logger logger = LogManager.getLogger(ListGeneratorController.class);
+    private static final int SPINNER_INTEGER_MIN_VALUE = 0;
+    private static final int SPINNER_INTEGER_M_MIN_VALUE = 1;
+    private static final int SPINNER_INTEGER_DEFAULT_VALUE = 1;
+    private static final int SPINNER_INTEGER_MAX_VALUE = Integer.MAX_VALUE;
+    private static final int SPINNER_NO_INCREMENT_STEP = 0;
+    private static final int DEFAULT_AMOUNT_OF_NUMBERS = 20;
+    private static final int DEFAULT_DECIMAL_PLACES = 4;
 
     @FXML
     private CheckBox chkDefault;
@@ -33,20 +37,45 @@ public class ListGeneratorController {
     private Button btnAgregar;
 
     @FXML
-    private TextField txtA;
+    private Spinner<Integer> spnA;
 
     @FXML
-    private TextField txtC;
+    private Spinner<Integer> spnC;
 
     @FXML
-    private TextField txtM;
+    private Spinner<Integer> spnM;
 
     @FXML
-    private TextField txtSeed;
+    private Spinner<Integer> spnSeed;
+
 
     @FXML
-    private Button btnGenerar;
+    public void initialize(){
+        initializeSpinners();
+    }
 
+    private void initializeSpinners() {
+        spnA.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
+        spnA.focusedProperty().addListener(getListenerForChangeValue(spnA));
+        spnC.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
+        spnC.focusedProperty().addListener(getListenerForChangeValue(spnC));
+        spnM.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_M_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
+        spnM.focusedProperty().addListener(getListenerForChangeValue(spnM));
+        spnSeed.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
+        spnSeed.focusedProperty().addListener(getListenerForChangeValue(spnSeed));
+    }
+
+    private SpinnerValueFactory<Integer> getIntegerValueFactory(int min, int max) {
+        return new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max);
+    }
+
+    private <T> ChangeListener<? super Boolean> getListenerForChangeValue(Spinner<T> spinner) {
+        return (observable, oldValue, newValue) -> {
+            if (!newValue) {
+                spinner.increment(SPINNER_NO_INCREMENT_STEP);
+            }
+        };
+    }
 
     @FXML
     void btnAgregarClick(ActionEvent event) {
@@ -67,7 +96,7 @@ public class ListGeneratorController {
     }
 
     @FXML
-    void btnResetClick(ActionEvent event) {
+    void btnLimpiarClick(ActionEvent event) {
         clearListView();
     }
 
@@ -85,9 +114,9 @@ public class ListGeneratorController {
         RandomGenerator generator = getGenerator();
 
         List<Double> numbers = generator
-                .random(20)
+                .random(DEFAULT_AMOUNT_OF_NUMBERS)
                 .stream()
-                .map(num -> MathUtils.round(num, 4))
+                .map(num -> MathUtils.round(num, DEFAULT_DECIMAL_PLACES))
                 .collect(Collectors.toList());
 
         setListToListView(numbers);
@@ -120,97 +149,60 @@ public class ListGeneratorController {
             createGenerator();
         }
         return generator;
-
     }
 
     private void clearListView() {
         listItems.getItems().clear();
     }
 
-    private void clearTxts() {
-        txtA.setText(Strings.EMPTY);
-        txtC.setText(Strings.EMPTY);
-        txtM.setText(Strings.EMPTY);
-        txtSeed.setText(Strings.EMPTY);
+    private void setDefaultValuesToSpinner() {
+        setValueToSpinner(spnA, SPINNER_INTEGER_DEFAULT_VALUE);
+        setValueToSpinner(spnC, SPINNER_INTEGER_DEFAULT_VALUE);
+        setValueToSpinner(spnM, SPINNER_INTEGER_DEFAULT_VALUE);
+        setValueToSpinner(spnSeed, SPINNER_INTEGER_DEFAULT_VALUE);
     }
 
-    private void defaultTxts() {
-        setDefaultValueToTxtA();
-        setDefaultValueToTxtC();
-        setDefaultValueToTxtM();
-        setDefaultValueToTxtSeed();
+    private void setGeneratorDefaultsValuesToSpinners() {
+        setValueToSpinner(spnA, Congruential.DEFAULT_A);
+        setValueToSpinner(spnC, Congruential.MIXED_CG_DEFAULT_C);
+        setValueToSpinner(spnM, Congruential.DEFAULT_M);
+        setValueToSpinner(spnSeed, Congruential.DEFAULT_SEED);
     }
 
     private void updateStatusOfTxtFieldUponChkClick() {
         if (chkDefault.isSelected()) {
-            defaultTxts();
+            setGeneratorDefaultsValuesToSpinners();
         } else {
-            clearTxts();
+            setDefaultValuesToSpinner();
         }
-        setStatusOfTxtFields(chkDefault.isSelected());
+        setStatusOfSpinners(chkDefault.isSelected());
     }
 
-    private void setStatusOfTxtFields(boolean status) {
-        txtA.setDisable(status);
-        txtC.setDisable(status);
-        txtM.setDisable(status);
-        txtSeed.setDisable(status);
+    private void setStatusOfSpinners(boolean status) {
+        spnA.setDisable(status);
+        spnC.setDisable(status);
+        spnM.setDisable(status);
+        spnSeed.setDisable(status);
     }
 
     private int getA() {
-        try {
-            return Integer.parseInt(txtA.getText());
-        } catch (Exception e) {
-            logger.error("Error getting A. Returning default.");
-            setDefaultValueToTxtA();
-            return Congruential.DEFAULT_A;
-        }
+        return spnA.getValue();
     }
 
     private int getC() {
-        try {
-            return Integer.parseInt(txtC.getText());
-        } catch (Exception e) {
-            logger.error("Error getting C. Returning mixed default.");
-            setDefaultValueToTxtC();
-            return Congruential.MIXED_CG_DEFAULT_C;
-        }
+        return spnC.getValue();
     }
 
     private int getM() {
-        try {
-            return Integer.parseInt(txtM.getText());
-        } catch (Exception e) {
-            logger.error("Error getting M. Returning default.");
-            setDefaultValueToTxtM();
-            return Congruential.DEFAULT_M;
-        }
+       return spnM.getValue();
 
     }
 
     private int getSeed() {
-        try {
-            return Integer.parseInt(txtSeed.getText());
-        } catch (Exception e) {
-            logger.error("Error getting seed. Returning default.");
-            setDefaultValueToTxtSeed();
-            return Congruential.DEFAULT_SEED;
-        }
+       return spnSeed.getValue();
     }
 
-    private void setDefaultValueToTxtA() {
-        txtA.setText(Integer.toString(Congruential.DEFAULT_A));
-    }
-
-    private void setDefaultValueToTxtC() {
-        txtC.setText(Integer.toString(Congruential.MIXED_CG_DEFAULT_C));
-    }
-
-    private void setDefaultValueToTxtM() {
-        txtM.setText(Integer.toString(Congruential.DEFAULT_M));
-    }
-
-    private void setDefaultValueToTxtSeed() {
-        txtSeed.setText(Integer.toString(Congruential.DEFAULT_SEED));
+    private <T> void setValueToSpinner(Spinner<T> spinner, T value){
+        spinner.getValueFactory().setValue(value);
     }
 }
