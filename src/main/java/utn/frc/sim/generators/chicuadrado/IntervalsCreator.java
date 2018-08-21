@@ -14,11 +14,23 @@ public class IntervalsCreator {
     private List<Interval> intervals;
     private static final double TOP_VALUE = 0.9999;
 
-    public IntervalsCreator(int amountOfNumbers, int amountOfIntervals, GeneratorType type) throws IntervalNotDivisibleException {
-        createIntervals(amountOfIntervals, amountOfNumbers, type);
+    public IntervalsCreator() {
     }
 
-    private void createIntervals(int amountOfIntervals, int amountOfNumbers, GeneratorType type) throws IntervalNotDivisibleException {
+    /**
+     * Metodo estatico que instancia a la clase con la informacion necesaria.
+     * Patron factory method.
+     */
+    public static IntervalsCreator createFor(int amountOfNumbers, int amountOfIntervals, GeneratorType type) throws IntervalNotDivisibleException{
+        IntervalsCreator intervalsCreator = new IntervalsCreator();
+        intervalsCreator.createIntervals(amountOfNumbers, amountOfIntervals, type);
+        return intervalsCreator;
+    }
+
+    /**
+     * Metodo que genera los intervalos.
+     */
+    private void createIntervals(int amountOfNumbers, int amountOfIntervals, GeneratorType type) throws IntervalNotDivisibleException {
 
         if (amountOfNumbers % amountOfIntervals != 0) {
             throw new IntervalNotDivisibleException();
