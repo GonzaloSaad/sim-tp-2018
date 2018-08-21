@@ -15,7 +15,6 @@ import java.io.IOException;
 
 public class MainMenuController {
 
-
     @FXML
     private Pane mainPane;
 
@@ -46,7 +45,4 @@ public class MainMenuController {
             logger.error("Problem opening chi cuadrado.",e);
         }
     }
-
-
-
 }
