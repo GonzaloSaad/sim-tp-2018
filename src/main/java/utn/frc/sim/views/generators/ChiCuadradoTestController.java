@@ -10,12 +10,14 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.chicuadrado.Interval;
 import utn.frc.sim.generators.chicuadrado.IntervalsCreator;
-import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import utn.frc.sim.generators.chicuadrado.exceptions.IntervalNotDivisibleException;
+import utn.frc.sim.generators.congruential.CongruentialGenerator;
+import utn.frc.sim.generators.javanative.JavaGenerator;
 import utn.frc.sim.util.MathUtils;
-
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class ChiCuadradoTestController {
     private static final String TABLE_VIEW_EXPECTED_FREQUENCY_COLUMN_LABEL = "FE";
     private static final String TABLE_VIEW_OBSERVED_FREQUENCY_COLUMN_LABEL = "FO";
     private static final String TABLE_VIEW_RESULT_COLUMN_LABEL = "(FE-FO)^2/2";
-    private static final String HO_ACCEPTED = "ACEPTADA";
+    private static final String HO_ACCEPTED = "NO RECHAZADA";
     private static final String HO_REJECTED = "RECHAZADA";
     private static final String COMBO_BOX_JAVA_NATIVE = "Nativo (Java)";
     private static final String COMBO_BOX_CONGRUENTIAL = "Congruencial";
@@ -261,12 +263,11 @@ public class ChiCuadradoTestController {
     /**
      * Metodo que obtiene el correspondiente valor de la tabla de
      * chi cuadrado en funcion de los parametros ingresados.
-     * @return
      */
     private double getChiSquaredTableValueFromParameters() {
         int degreesOfFreedom = spnAmountOfIntervals.getValue() - 1;
         double alpha = spnAlpha.getValue();
-        return new ChiSquaredDistribution(degreesOfFreedom).inverseCumulativeProbability(alpha);
+        return new ChiSquaredDistribution(degreesOfFreedom).inverseCumulativeProbability(1 - alpha);
 
     }
 
@@ -287,33 +288,20 @@ public class ChiCuadradoTestController {
         int amountOfNumbers = spnAmountOfNumbers.getValue();
         int amountOfIntervals = spnAmountOfIntervals.getValue();
 
-        IntervalsCreator.GeneratorType generatorType = getTypeFromComboBox();
+        RandomGenerator generator = getGenerator();
 
-        return buildIntervalsCreator(amountOfNumbers, amountOfIntervals, generatorType);
+        return IntervalsCreator.createFor(amountOfNumbers, amountOfIntervals, generator);
 
-    }
-
-    /**
-     * Metodo que crea una instancia de IntervalsCreator con los valores
-     * pasados por parametro.
-     */
-    private IntervalsCreator buildIntervalsCreator(int amountOfNumbers,
-                                                   int amountOfIntervals,
-                                                   IntervalsCreator.GeneratorType type) throws IntervalNotDivisibleException {
-
-        return IntervalsCreator.createFor(amountOfNumbers, amountOfIntervals, type);
     }
 
     /**
      * Metodo que transforma lo seleccionado en el combobox de tipo
-     * de generador en el valor GeneratorType correspondiente.
+     * de generador en el Generador correspondiente.
      */
-    private IntervalsCreator.GeneratorType getTypeFromComboBox() {
+    private RandomGenerator getGenerator() {
         if (cmbGenerador.getSelectionModel().getSelectedItem().equals(COMBO_BOX_JAVA_NATIVE)) {
-            return IntervalsCreator.GeneratorType.JAVA_NATIVE;
+            return JavaGenerator.defaultJava();
         }
-        return IntervalsCreator.GeneratorType.CONGRUENTIAL;
+        return CongruentialGenerator.defaultMixed();
     }
-
-
 }
