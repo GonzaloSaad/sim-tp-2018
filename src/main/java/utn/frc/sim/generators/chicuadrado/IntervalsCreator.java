@@ -12,7 +12,7 @@ import java.util.Optional;
 public class IntervalsCreator {
 
     private List<Interval> intervals;
-    private static final double TOP_VALUE = 0.9999;
+    private static final double TOP_VALUE = 1;
 
     public IntervalsCreator() {
     }
