@@ -12,37 +12,64 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-
+/***
+ * Clase que se encarga de implementar la logica de la vista principal de menu.
+ * La pantalla principal, tiene un panel en el cual ocurren todas las escenas.
+ */
 public class MainMenuController {
 
     @FXML
     private Pane mainPane;
+    /**
+     * Panel donde ocurren las escenas.
+     **/
 
     private static Logger logger = LogManager.getLogger(MainMenuController.class);
 
+    /**
+     * Metodo que manera el evento de click sobre
+     * la opcion de la lista de numeros aleratorios
+     *
+     * @param event
+     */
     @FXML
     void openListGeneratorDialog(ActionEvent event) {
         setListGeneratorDialog();
     }
 
+    /**
+     * Metodo que maneja el evento de click sobre
+     * la opcion de la prueba de chi-cuadrado.
+     *
+     * @param event
+     */
     @FXML
     void openChiCuadradoDialog(ActionEvent event) {
         setChiCuadradoDialog();
     }
 
-    private void setListGeneratorDialog(){
+    /**
+     * Accion de setear la vista de la lista de
+     * generacion de numeros aleatorios al
+     * panel principal
+     **/
+    private void setListGeneratorDialog() {
         try {
-            mainPane.getChildren().setAll((AnchorPane)FXMLLoader.load(getClass().getResource("/number-generator.fxml")));
+            mainPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/number-generator.fxml")));
         } catch (IOException e) {
-            logger.error("Problem opening list generator.",e);
+            logger.error("Problem opening list generator.", e);
         }
     }
 
-    private void setChiCuadradoDialog(){
+    /**
+     * Accion de setear la vista de la el test
+     * de chi cuadrado al panel principal.
+     */
+    private void setChiCuadradoDialog() {
         try {
-            mainPane.getChildren().setAll((AnchorPane)FXMLLoader.load(getClass().getResource("/chi-cuadrado-test.fxml")));
+            mainPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/chi-cuadrado-test.fxml")));
         } catch (IOException e) {
-            logger.error("Problem opening chi cuadrado.",e);
+            logger.error("Problem opening chi cuadrado.", e);
         }
     }
 }
