@@ -27,7 +27,7 @@ public class CongruentialGenerator implements Congruential {
     }
 
     /**
-     * Metodo que intancia a la clase con los valores necesarios.
+     * Metodo que instancia a la clase con los valores necesarios.
      * Patron factory method.
      */
     public static CongruentialGenerator createOf(int a, int m, int c, int seed) {

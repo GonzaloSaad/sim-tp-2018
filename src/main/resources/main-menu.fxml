@@ -25,30 +25,35 @@
       </MenuBar>
       <Pane fx:id="mainPane" layoutY="29.0" prefHeight="528.0" prefWidth="1024.0">
          <children>
-            <Label layoutX="368.0" layoutY="275.0" prefHeight="25.0" prefWidth="289.0" text="Trabajo Práctico N° 1" textAlignment="CENTER" underline="true">
+            <Label layoutX="388.0" layoutY="239.0" prefHeight="35.0" prefWidth="249.0" text="Trabajo Práctico N° 1" textAlignment="CENTER" underline="true">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Label layoutX="397.0" layoutY="234.0" prefHeight="30.0" prefWidth="231.0" text="Simulación curso 4K4" textAlignment="CENTER">
+            <Label layoutX="420.0" layoutY="197.0" prefHeight="30.0" prefWidth="186.0" text="Simulación curso 4K4" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="291.0" layoutY="319.0" prefHeight="79.0" prefWidth="442.0" text="&quot;Generación de números aleatorios&quot;" textAlignment="CENTER" wrapText="true">
+            <Label layoutX="321.0" layoutY="273.0" prefHeight="79.0" prefWidth="384.0" text="&quot;Generación de números aleatorios&quot;" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-             <ImageView fitHeight="114.0" fitWidth="570.0" layoutX="227.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+             <ImageView fitHeight="114.0" fitWidth="570.0" layoutX="227.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true">
                  <image>
                      <Image url="@LOGO-UTN-FRC-SISTEMAS.png" />
                  </image>
              </ImageView>
+            <Label layoutX="384.0" layoutY="339.0" prefHeight="161.0" prefWidth="259.0" text="Santiago Argüello&#9;&#9;69966&#10;José I. Caffaratti&#9;&#9;58333&#10;Gonzalo Saad&#9;&#9;&#9;70785&#10;Andrés Acosta&#10;Juan M. Antonellini&#9;63029" textAlignment="JUSTIFY" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
          </children></Pane>
       <Pane layoutY="551.0" prefHeight="25.0" prefWidth="1024.0" style="-fx-background-color: #d7e1f2;">
          <children>
-            <Label layoutX="950.0" layoutY="3.0" text="Base project" />
+            <Label layoutX="902.0" layoutY="3.0" prefHeight="17.0" prefWidth="120.0" text="Grupo 6 Copyright ©" />
          </children>
       </Pane>
    </children>
