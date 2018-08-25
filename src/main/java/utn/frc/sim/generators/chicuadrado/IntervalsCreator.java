@@ -21,7 +21,7 @@ public class IntervalsCreator {
      * Metodo estatico que instancia a la clase con la informacion necesaria.
      * Patron factory method.
      */
-    public static IntervalsCreator createFor(int amountOfNumbers, int amountOfIntervals, RandomGenerator generator) throws IntervalNotDivisibleException{
+    public static IntervalsCreator createFor(int amountOfNumbers, int amountOfIntervals, RandomGenerator generator) throws IntervalNotDivisibleException {
         IntervalsCreator intervalsCreator = new IntervalsCreator();
         intervalsCreator.createIntervals(amountOfNumbers, amountOfIntervals, generator);
         return intervalsCreator;

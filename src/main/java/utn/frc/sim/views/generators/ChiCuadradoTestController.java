@@ -226,7 +226,7 @@ public class ChiCuadradoTestController {
      * Metodo que inserta un listener de texto de Texfield
      * a un spinner.
      */
-    private void setTextFieldListenerToSpinner(Spinner spinner){
+    private void setTextFieldListenerToSpinner(Spinner spinner) {
         TextField textField = spinner.getEditor();
         textField.textProperty().addListener(getListenerForText(textField));
     }
@@ -235,7 +235,7 @@ public class ChiCuadradoTestController {
      * Metodo que genera un Listener para el cambio de
      * texto de un TextField.
      */
-    private ChangeListener<String> getListenerForText(TextField textField){
+    private ChangeListener<String> getListenerForText(TextField textField) {
         return (observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 textField.setText(newValue.replaceAll("[^\\d]", ""));

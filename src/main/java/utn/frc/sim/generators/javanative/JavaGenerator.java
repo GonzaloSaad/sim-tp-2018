@@ -7,11 +7,11 @@ import java.util.List;
 
 public class JavaGenerator implements RandomGenerator {
 
-    private JavaGenerator(){
+    private JavaGenerator() {
 
     }
 
-    public static JavaGenerator defaultJava(){
+    public static JavaGenerator defaultJava() {
         return new JavaGenerator();
     }
 

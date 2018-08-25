@@ -29,8 +29,6 @@ public class MainMenuController {
     /**
      * Metodo que manera el evento de click sobre
      * la opcion de la lista de numeros aleratorios
-     *
-     * @param event
      */
     @FXML
     void openListGeneratorDialog(ActionEvent event) {
@@ -40,8 +38,6 @@ public class MainMenuController {
     /**
      * Metodo que maneja el evento de click sobre
      * la opcion de la prueba de chi-cuadrado.
-     *
-     * @param event
      */
     @FXML
     void openChiCuadradoDialog(ActionEvent event) {
