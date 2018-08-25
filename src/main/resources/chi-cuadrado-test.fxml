@@ -40,6 +40,6 @@
       <Spinner fx:id="spnAmountOfNumbers" editable="true" layoutX="121.0" layoutY="33.0" />
       <Spinner fx:id="spnAmountOfIntervals" editable="true" layoutX="121.0" layoutY="63.0" />
       <Label alignment="CENTER_RIGHT" layoutX="46.0" layoutY="98.0" prefHeight="17.0" prefWidth="65.0" text="Alfa:" />
-      <Spinner fx:id="spnAlpha" editable="true" layoutX="120.0" layoutY="94.0" />
+      <Spinner fx:id="spnAlpha" layoutX="120.0" layoutY="94.0" />
    </children>
 </AnchorPane>

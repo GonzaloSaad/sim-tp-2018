@@ -3,6 +3,7 @@ package utn.frc.sim.views.generators;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.chicuadrado.Interval;
@@ -49,10 +51,10 @@ public class ChiCuadradoTestController {
     private static final int SPINNER_INTEGER_MAX_VALUE = Integer.MAX_VALUE;
     private static final int SPINNER_NO_INCREMENT_STEP = 0;
 
-    private static final double SPINNER_DOUBLE_MIN_VALUE = 0.0001;
+    private static final double SPINNER_DOUBLE_MIN_VALUE = 0.01;
     private static final double SPINNER_DOUBLE_MAX_VALUE = 1;
-    private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.0001;
-    private static final double SPINNER_DOUBLE_STEP_VALUE = 0.0001;
+    private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.01;
+    private static final double SPINNER_DOUBLE_STEP_VALUE = 0.01;
     private static final int PLACES = 4;
 
 
@@ -152,18 +154,20 @@ public class ChiCuadradoTestController {
      */
     private void initializeSpinners() {
         spnAmountOfIntervals.setValueFactory(getIntegerValueFactory());
-        spnAmountOfIntervals.focusedProperty().addListener(getListenerForChangeValue(spnAmountOfIntervals));
+        spnAmountOfIntervals.focusedProperty().addListener(getListenerForChangeFocus(spnAmountOfIntervals));
+        setTextFieldListenerToSpinner(spnAmountOfIntervals);
         spnAmountOfNumbers.setValueFactory(getIntegerValueFactory());
-        spnAmountOfNumbers.focusedProperty().addListener(getListenerForChangeValue(spnAmountOfNumbers));
+        spnAmountOfNumbers.focusedProperty().addListener(getListenerForChangeFocus(spnAmountOfNumbers));
+        setTextFieldListenerToSpinner(spnAmountOfNumbers);
         spnAlpha.setValueFactory(getDoubleValueFactory());
-        spnAlpha.focusedProperty().addListener(getListenerForChangeValue(spnAlpha));
     }
 
     /**
      * Metodo que contruye fabrica de valores enteros para los spinners.
      */
     private SpinnerValueFactory<Integer> getIntegerValueFactory() {
-        return new SpinnerValueFactory.IntegerSpinnerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE);
+        return new SpinnerValueFactory.IntegerSpinnerValueFactory(SPINNER_INTEGER_MIN_VALUE,
+                SPINNER_INTEGER_MAX_VALUE);
     }
 
     /**
@@ -179,9 +183,14 @@ public class ChiCuadradoTestController {
         return factory;
     }
 
+    /**
+     * Metodo que crea un convertidor de double a string con
+     * un formato #.##
+     * Sirve para customizar la cantidad de decimales del spinner
+     */
     private StringConverter<Double> getStringDoubleConverter() {
         return new StringConverter<Double>() {
-            private final DecimalFormat df = new DecimalFormat("#.####");
+            private final DecimalFormat df = new DecimalFormat("#0.00");
 
             @Override
             public String toString(Double value) {
@@ -214,37 +223,36 @@ public class ChiCuadradoTestController {
     }
 
     /**
+     * Metodo que inserta un listener de texto de Texfield
+     * a un spinner.
+     */
+    private void setTextFieldListenerToSpinner(Spinner spinner){
+        TextField textField = spinner.getEditor();
+        textField.textProperty().addListener(getListenerForText(textField));
+    }
+
+    /**
+     * Metodo que genera un Listener para el cambio de
+     * texto de un TextField.
+     */
+    private ChangeListener<String> getListenerForText(TextField textField){
+        return (observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        };
+    }
+
+    /**
      * Metodo que genera un listener para perdida de focus, que se usa
      * para compensar el bug de JavaFX en setear el valor al spinner cuando
      * es editado.
      */
-    private <T> ChangeListener<? super Boolean> getListenerForChangeValue(Spinner<T> spinner) {
+    private <T> ChangeListener<? super Boolean> getListenerForChangeFocus(Spinner<T> spinner) {
         return (observable, oldValue, newValue) -> {
             if (!newValue) {
-
-                if (spinner.isEditable()) {
-
-                    String text = spinner.getEditor().getText();
-
-                    SpinnerValueFactory<T> valueFactory = spinner.getValueFactory();
-                    if (valueFactory != null) {
-                        StringConverter<T> converter = valueFactory.getConverter();
-                        if (converter != null) {
-                            T value = spinner.getValue();
-                            try {
-                                value = converter.fromString(text);
-                            } catch (Exception e){
-
-                            }
-                            finally {
-                                spinner.getValueFactory().setValue(value);
-                                spinner.getEditor().setText(value.toString());
-                            }
-                        }
-                    }
-                }
+                spinner.increment(SPINNER_NO_INCREMENT_STEP);
             }
-
         };
     }
 

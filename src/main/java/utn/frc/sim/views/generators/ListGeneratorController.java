@@ -67,12 +67,16 @@ public class ListGeneratorController {
     private void initializeSpinners() {
         spnA.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnA.focusedProperty().addListener(getListenerForChangeValue(spnA));
+        setTextFieldListenerToSpinner(spnA);
         spnC.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnC.focusedProperty().addListener(getListenerForChangeValue(spnC));
+        setTextFieldListenerToSpinner(spnC);
         spnM.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_M_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnM.focusedProperty().addListener(getListenerForChangeValue(spnM));
+        setTextFieldListenerToSpinner(spnM);
         spnSeed.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnSeed.focusedProperty().addListener(getListenerForChangeValue(spnSeed));
+        setTextFieldListenerToSpinner(spnSeed);
     }
 
     /**
@@ -89,6 +93,27 @@ public class ListGeneratorController {
         return (observable, oldValue, newValue) -> {
             if (!newValue) {
                 spinner.increment(SPINNER_NO_INCREMENT_STEP);
+            }
+        };
+    }
+
+    /**
+     * Metodo que inserta un listener de texto de Texfield
+     * a un spinner.
+     */
+    private void setTextFieldListenerToSpinner(Spinner spinner){
+        TextField textField = spinner.getEditor();
+        textField.textProperty().addListener(getListenerForText(textField));
+    }
+
+    /**
+     * Metodo que genera un Listener para el cambio de
+     * texto de un TextField.
+     */
+    private ChangeListener<String> getListenerForText(TextField textField){
+        return (observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         };
     }
