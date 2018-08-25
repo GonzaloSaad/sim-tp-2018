@@ -7,6 +7,13 @@ import java.util.List;
 
 public class JavaGenerator implements RandomGenerator {
 
+    private JavaGenerator() {
+    }
+
+    public static JavaGenerator defaultJava() {
+        return new JavaGenerator();
+    }
+
     @Override
     public double random() {
         return Math.random();

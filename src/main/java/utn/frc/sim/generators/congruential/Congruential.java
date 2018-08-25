@@ -10,5 +10,6 @@ public interface Congruential extends Generator {
     int MULTIPLICATIVE_CG_DEFAULT_C = 0;
 
     boolean isMultiplicative();
+
     boolean isMixed();
 }

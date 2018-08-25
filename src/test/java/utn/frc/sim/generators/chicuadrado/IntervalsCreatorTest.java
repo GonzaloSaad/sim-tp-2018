@@ -2,6 +2,8 @@ package utn.frc.sim.generators.chicuadrado;
 
 import org.junit.Test;
 import utn.frc.sim.generators.chicuadrado.exceptions.IntervalNotDivisibleException;
+import utn.frc.sim.generators.congruential.CongruentialGenerator;
+import utn.frc.sim.generators.javanative.JavaGenerator;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -17,20 +19,20 @@ public class IntervalsCreatorTest {
 
     @Test
     public void testJava() throws IntervalNotDivisibleException {
-        creator = IntervalsCreator.createFor(NUMBERS, INTERVALS, IntervalsCreator.GeneratorType.JAVA_NATIVE);
+        creator = IntervalsCreator.createFor(NUMBERS, INTERVALS, JavaGenerator.defaultJava());
         creator.getIntervals()
                 .forEach(interval -> assertEquals(interval.getExpectedFrequency(), NUMBERS / INTERVALS));
     }
 
     @Test
     public void testCongruential() throws IntervalNotDivisibleException {
-        creator = IntervalsCreator.createFor(NUMBERS, INTERVALS, IntervalsCreator.GeneratorType.CONGRUENTIAL);
+        creator = IntervalsCreator.createFor(NUMBERS, INTERVALS, CongruentialGenerator.defaultMixed());
         creator.getIntervals()
                 .forEach(interval -> assertEquals(interval.getExpectedFrequency(), NUMBERS / INTERVALS));
     }
 
     @Test(expected = IntervalNotDivisibleException.class)
     public void testIntervalNotDivisible() throws IntervalNotDivisibleException {
-        creator = IntervalsCreator.createFor(NUMBERS_FOR_FAIL, INTERVALS, IntervalsCreator.GeneratorType.CONGRUENTIAL);
+        creator = IntervalsCreator.createFor(NUMBERS_FOR_FAIL, INTERVALS, CongruentialGenerator.defaultMixed());
     }
 }

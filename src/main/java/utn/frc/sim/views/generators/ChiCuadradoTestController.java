@@ -3,6 +3,7 @@ package utn.frc.sim.views.generators;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,13 +11,20 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.chicuadrado.Interval;
 import utn.frc.sim.generators.chicuadrado.IntervalsCreator;
-import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import utn.frc.sim.generators.chicuadrado.exceptions.IntervalNotDivisibleException;
+import utn.frc.sim.generators.congruential.CongruentialGenerator;
+import utn.frc.sim.generators.javanative.JavaGenerator;
 import utn.frc.sim.util.MathUtils;
 
-
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -34,7 +42,7 @@ public class ChiCuadradoTestController {
     private static final String TABLE_VIEW_EXPECTED_FREQUENCY_COLUMN_LABEL = "FE";
     private static final String TABLE_VIEW_OBSERVED_FREQUENCY_COLUMN_LABEL = "FO";
     private static final String TABLE_VIEW_RESULT_COLUMN_LABEL = "(FE-FO)^2/2";
-    private static final String HO_ACCEPTED = "ACEPTADA";
+    private static final String HO_ACCEPTED = "NO RECHAZADA";
     private static final String HO_REJECTED = "RECHAZADA";
     private static final String COMBO_BOX_JAVA_NATIVE = "Nativo (Java)";
     private static final String COMBO_BOX_CONGRUENTIAL = "Congruencial";
@@ -43,10 +51,10 @@ public class ChiCuadradoTestController {
     private static final int SPINNER_INTEGER_MAX_VALUE = Integer.MAX_VALUE;
     private static final int SPINNER_NO_INCREMENT_STEP = 0;
 
-    private static final double SPINNER_DOUBLE_MIN_VALUE = 0.0001;
+    private static final double SPINNER_DOUBLE_MIN_VALUE = 0.01;
     private static final double SPINNER_DOUBLE_MAX_VALUE = 1;
-    private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.10;
-    private static final double SPINNER_DOUBLE_STEP_VALUE = 0.05;
+    private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.01;
+    private static final double SPINNER_DOUBLE_STEP_VALUE = 0.01;
     private static final int PLACES = 4;
 
 
@@ -146,41 +154,101 @@ public class ChiCuadradoTestController {
      */
     private void initializeSpinners() {
         spnAmountOfIntervals.setValueFactory(getIntegerValueFactory());
-        spnAmountOfIntervals.focusedProperty().addListener(getListenerForChangeValue(spnAmountOfIntervals));
+        spnAmountOfIntervals.focusedProperty().addListener(getListenerForChangeFocus(spnAmountOfIntervals));
+        setTextFieldListenerToSpinner(spnAmountOfIntervals);
         spnAmountOfNumbers.setValueFactory(getIntegerValueFactory());
-        spnAmountOfNumbers.focusedProperty().addListener(getListenerForChangeValue(spnAmountOfNumbers));
+        spnAmountOfNumbers.focusedProperty().addListener(getListenerForChangeFocus(spnAmountOfNumbers));
+        setTextFieldListenerToSpinner(spnAmountOfNumbers);
         spnAlpha.setValueFactory(getDoubleValueFactory());
-        spnAlpha.focusedProperty().addListener(getListenerForChangeValue(spnAlpha));
-
     }
 
     /**
      * Metodo que contruye fabrica de valores enteros para los spinners.
      */
     private SpinnerValueFactory<Integer> getIntegerValueFactory() {
-        return new SpinnerValueFactory.IntegerSpinnerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE);
+        return new SpinnerValueFactory.IntegerSpinnerValueFactory(SPINNER_INTEGER_MIN_VALUE,
+                SPINNER_INTEGER_MAX_VALUE);
     }
 
     /**
      * Metodo que contruye fabrica de valores para decimales.
      */
     private SpinnerValueFactory<Double> getDoubleValueFactory() {
-        return new SpinnerValueFactory.DoubleSpinnerValueFactory(SPINNER_DOUBLE_MIN_VALUE,
+        SpinnerValueFactory<Double> factory = new SpinnerValueFactory.DoubleSpinnerValueFactory(SPINNER_DOUBLE_MIN_VALUE,
                 SPINNER_DOUBLE_MAX_VALUE,
                 SPINNER_DOUBLE_INITIAL_VALUE,
                 SPINNER_DOUBLE_STEP_VALUE);
+
+        factory.setConverter(getStringDoubleConverter());
+        return factory;
+    }
+
+    /**
+     * Metodo que crea un convertidor de double a string con
+     * un formato #.##
+     * Sirve para customizar la cantidad de decimales del spinner
+     */
+    private StringConverter<Double> getStringDoubleConverter() {
+        return new StringConverter<Double>() {
+            private final DecimalFormat df = new DecimalFormat("#0.00");
+
+            @Override
+            public String toString(Double value) {
+                if (value == null) {
+                    return "";
+                }
+
+                return df.format(value);
+            }
+
+            @Override
+            public Double fromString(String value) {
+                try {
+                    if (value == null) {
+                        return SPINNER_DOUBLE_INITIAL_VALUE;
+                    }
+
+                    value = value.trim();
+
+                    if (value.length() < 1) {
+                        return SPINNER_DOUBLE_INITIAL_VALUE;
+                    }
+
+                    return df.parse(value).doubleValue();
+                } catch (ParseException ex) {
+                    return SPINNER_DOUBLE_INITIAL_VALUE;
+                }
+            }
+        };
+    }
+
+    /**
+     * Metodo que inserta un listener de texto de Texfield
+     * a un spinner.
+     */
+    private void setTextFieldListenerToSpinner(Spinner spinner) {
+        TextField textField = spinner.getEditor();
+        textField.textProperty().addListener(getListenerForText(textField));
+    }
+
+    /**
+     * Metodo que genera un Listener para el cambio de
+     * texto de un TextField.
+     */
+    private ChangeListener<String> getListenerForText(TextField textField) {
+        return (observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        };
     }
 
     /**
      * Metodo que genera un listener para perdida de focus, que se usa
      * para compensar el bug de JavaFX en setear el valor al spinner cuando
      * es editado.
-     *
-     * @param spinner
-     * @param <T>
-     * @return
      */
-    private <T> ChangeListener<? super Boolean> getListenerForChangeValue(Spinner<T> spinner) {
+    private <T> ChangeListener<? super Boolean> getListenerForChangeFocus(Spinner<T> spinner) {
         return (observable, oldValue, newValue) -> {
             if (!newValue) {
                 spinner.increment(SPINNER_NO_INCREMENT_STEP);
@@ -199,7 +267,7 @@ public class ChiCuadradoTestController {
         } catch (IntervalNotDivisibleException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_NOT_DIVISIBLE, ButtonType.OK);
             alert.showAndWait();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_ERROR, ButtonType.OK);
             alert.showAndWait();
         }
@@ -261,12 +329,11 @@ public class ChiCuadradoTestController {
     /**
      * Metodo que obtiene el correspondiente valor de la tabla de
      * chi cuadrado en funcion de los parametros ingresados.
-     * @return
      */
     private double getChiSquaredTableValueFromParameters() {
         int degreesOfFreedom = spnAmountOfIntervals.getValue() - 1;
         double alpha = spnAlpha.getValue();
-        return new ChiSquaredDistribution(degreesOfFreedom).inverseCumulativeProbability(alpha);
+        return new ChiSquaredDistribution(degreesOfFreedom).inverseCumulativeProbability(1 - alpha);
 
     }
 
@@ -287,33 +354,20 @@ public class ChiCuadradoTestController {
         int amountOfNumbers = spnAmountOfNumbers.getValue();
         int amountOfIntervals = spnAmountOfIntervals.getValue();
 
-        IntervalsCreator.GeneratorType generatorType = getTypeFromComboBox();
+        RandomGenerator generator = getGenerator();
 
-        return buildIntervalsCreator(amountOfNumbers, amountOfIntervals, generatorType);
+        return IntervalsCreator.createFor(amountOfNumbers, amountOfIntervals, generator);
 
-    }
-
-    /**
-     * Metodo que crea una instancia de IntervalsCreator con los valores
-     * pasados por parametro.
-     */
-    private IntervalsCreator buildIntervalsCreator(int amountOfNumbers,
-                                                   int amountOfIntervals,
-                                                   IntervalsCreator.GeneratorType type) throws IntervalNotDivisibleException {
-
-        return IntervalsCreator.createFor(amountOfNumbers, amountOfIntervals, type);
     }
 
     /**
      * Metodo que transforma lo seleccionado en el combobox de tipo
-     * de generador en el valor GeneratorType correspondiente.
+     * de generador en el Generador correspondiente.
      */
-    private IntervalsCreator.GeneratorType getTypeFromComboBox() {
+    private RandomGenerator getGenerator() {
         if (cmbGenerador.getSelectionModel().getSelectedItem().equals(COMBO_BOX_JAVA_NATIVE)) {
-            return IntervalsCreator.GeneratorType.JAVA_NATIVE;
+            return JavaGenerator.defaultJava();
         }
-        return IntervalsCreator.GeneratorType.CONGRUENTIAL;
+        return CongruentialGenerator.defaultMixed();
     }
-
-
 }

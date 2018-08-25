@@ -21,22 +21,21 @@ public class IntervalsCreator {
      * Metodo estatico que instancia a la clase con la informacion necesaria.
      * Patron factory method.
      */
-    public static IntervalsCreator createFor(int amountOfNumbers, int amountOfIntervals, GeneratorType type) throws IntervalNotDivisibleException{
+    public static IntervalsCreator createFor(int amountOfNumbers, int amountOfIntervals, RandomGenerator generator) throws IntervalNotDivisibleException {
         IntervalsCreator intervalsCreator = new IntervalsCreator();
-        intervalsCreator.createIntervals(amountOfNumbers, amountOfIntervals, type);
+        intervalsCreator.createIntervals(amountOfNumbers, amountOfIntervals, generator);
         return intervalsCreator;
     }
 
     /**
      * Metodo que genera los intervalos.
      */
-    private void createIntervals(int amountOfNumbers, int amountOfIntervals, GeneratorType type) throws IntervalNotDivisibleException {
+    private void createIntervals(int amountOfNumbers, int amountOfIntervals, RandomGenerator generator) throws IntervalNotDivisibleException {
 
         if (amountOfNumbers % amountOfIntervals != 0) {
             throw new IntervalNotDivisibleException();
         }
 
-        RandomGenerator generator = getGenerator(type);
         intervals = new ArrayList<>();
 
         double step = TOP_VALUE / amountOfIntervals;
@@ -56,24 +55,8 @@ public class IntervalsCreator {
         }
     }
 
-    private RandomGenerator getGenerator(GeneratorType type) {
-
-        if (type == GeneratorType.JAVA_NATIVE) {
-            return new JavaGenerator();
-        } else if (type == GeneratorType.CONGRUENTIAL) {
-            return CongruentialGenerator.defaultMixed();
-        }
-        throw new IllegalStateException();
-    }
-
     public List<Interval> getIntervals() {
         return intervals;
     }
-
-    public enum GeneratorType {
-        JAVA_NATIVE,
-        CONGRUENTIAL
-    }
-
 }
 

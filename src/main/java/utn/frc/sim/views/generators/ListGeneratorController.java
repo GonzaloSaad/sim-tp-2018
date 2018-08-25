@@ -29,6 +29,8 @@ public class ListGeneratorController {
     private static final int SPINNER_NO_INCREMENT_STEP = 0;
     private static final int DEFAULT_AMOUNT_OF_NUMBERS = 20;
     private static final int DEFAULT_DECIMAL_PLACES = 4;
+    private static final String LBL_MULTIPLICATIVE = "MULTIPLICATIVO";
+    private static final String LBL_MIXED = "MIXTO";
 
     @FXML
     private CheckBox chkDefault;
@@ -48,6 +50,9 @@ public class ListGeneratorController {
     @FXML
     private Spinner<Integer> spnSeed;
 
+    @FXML
+    private Label lblGeneratorType;
+
 
     /**
      * Metodo disparado luego de la inicializacion del contenido
@@ -55,7 +60,7 @@ public class ListGeneratorController {
      * carga y todos los componentes han sido instanciados.
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
         initializeSpinners();
     }
 
@@ -67,12 +72,16 @@ public class ListGeneratorController {
     private void initializeSpinners() {
         spnA.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnA.focusedProperty().addListener(getListenerForChangeValue(spnA));
+        setTextFieldListenerToSpinner(spnA);
         spnC.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnC.focusedProperty().addListener(getListenerForChangeValue(spnC));
+        setTextFieldListenerToSpinner(spnC);
         spnM.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_M_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnM.focusedProperty().addListener(getListenerForChangeValue(spnM));
+        setTextFieldListenerToSpinner(spnM);
         spnSeed.setValueFactory(getIntegerValueFactory(SPINNER_INTEGER_MIN_VALUE, SPINNER_INTEGER_MAX_VALUE));
         spnSeed.focusedProperty().addListener(getListenerForChangeValue(spnSeed));
+        setTextFieldListenerToSpinner(spnSeed);
     }
 
     /**
@@ -89,6 +98,27 @@ public class ListGeneratorController {
         return (observable, oldValue, newValue) -> {
             if (!newValue) {
                 spinner.increment(SPINNER_NO_INCREMENT_STEP);
+            }
+        };
+    }
+
+    /**
+     * Metodo que inserta un listener de texto de Texfield
+     * a un spinner.
+     */
+    private void setTextFieldListenerToSpinner(Spinner spinner) {
+        TextField textField = spinner.getEditor();
+        textField.textProperty().addListener(getListenerForText(textField));
+    }
+
+    /**
+     * Metodo que genera un Listener para el cambio de
+     * texto de un TextField.
+     */
+    private ChangeListener<String> getListenerForText(TextField textField) {
+        return (observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         };
     }
@@ -161,6 +191,25 @@ public class ListGeneratorController {
                 .collect(Collectors.toList());
 
         setListToListView(numbers);
+        setLblGeneratorType();
+    }
+
+    /**
+     * Metodo que genera setea el valor del label de tipo de
+     * generador segun el generador que se haya usado.
+     */
+    private void setLblGeneratorType() {
+        try {
+            Congruential cGenerator = (Congruential) generator;
+            if (cGenerator.isMultiplicative()) {
+                lblGeneratorType.setText(LBL_MULTIPLICATIVE);
+            } else {
+                lblGeneratorType.setText(LBL_MIXED);
+            }
+        } catch (Exception e) {
+            logger.error("Error casting generator.");
+        }
+
     }
 
     /**
@@ -264,9 +313,10 @@ public class ListGeneratorController {
     /**
      * Metodo que setea un valor a un spinner dado.
      */
-    private <T> void setValueToSpinner(Spinner<T> spinner, T value){
+    private <T> void setValueToSpinner(Spinner<T> spinner, T value) {
         spinner.getValueFactory().setValue(value);
     }
+
     private int getA() {
         return spnA.getValue();
     }
@@ -276,13 +326,11 @@ public class ListGeneratorController {
     }
 
     private int getM() {
-       return spnM.getValue();
+        return spnM.getValue();
 
     }
 
     private int getSeed() {
-       return spnSeed.getValue();
+        return spnSeed.getValue();
     }
-
-
 }

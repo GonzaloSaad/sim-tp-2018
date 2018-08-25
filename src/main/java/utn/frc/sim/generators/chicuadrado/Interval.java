@@ -85,11 +85,11 @@ public class Interval {
         return Math.pow(observedFrequency - expectedFrequency, 2) / expectedFrequency;
     }
 
-    public String getDisplayableResult(){
+    public String getDisplayableResult() {
         return getDisplay(getResult());
     }
 
-    public String getPlottableInterval(){
-        return getDisplay((from + to)/2);
+    public String getPlottableInterval() {
+        return getDisplay((from + to) / 2);
     }
 }
