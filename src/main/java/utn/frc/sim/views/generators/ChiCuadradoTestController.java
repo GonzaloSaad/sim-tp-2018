@@ -10,13 +10,19 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.chicuadrado.Interval;
 import utn.frc.sim.generators.chicuadrado.IntervalsCreator;
-import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import utn.frc.sim.generators.chicuadrado.exceptions.IntervalNotDivisibleException;
+import utn.frc.sim.generators.congruential.CongruentialGenerator;
+import utn.frc.sim.generators.javanative.JavaGenerator;
 import utn.frc.sim.util.MathUtils;
 
-
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -34,7 +40,7 @@ public class ChiCuadradoTestController {
     private static final String TABLE_VIEW_EXPECTED_FREQUENCY_COLUMN_LABEL = "FE";
     private static final String TABLE_VIEW_OBSERVED_FREQUENCY_COLUMN_LABEL = "FO";
     private static final String TABLE_VIEW_RESULT_COLUMN_LABEL = "(FE-FO)^2/2";
-    private static final String HO_ACCEPTED = "ACEPTADA";
+    private static final String HO_ACCEPTED = "NO RECHAZADA";
     private static final String HO_REJECTED = "RECHAZADA";
     private static final String COMBO_BOX_JAVA_NATIVE = "Nativo (Java)";
     private static final String COMBO_BOX_CONGRUENTIAL = "Congruencial";
@@ -45,8 +51,8 @@ public class ChiCuadradoTestController {
 
     private static final double SPINNER_DOUBLE_MIN_VALUE = 0.0001;
     private static final double SPINNER_DOUBLE_MAX_VALUE = 1;
-    private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.10;
-    private static final double SPINNER_DOUBLE_STEP_VALUE = 0.05;
+    private static final double SPINNER_DOUBLE_INITIAL_VALUE = 0.0001;
+    private static final double SPINNER_DOUBLE_STEP_VALUE = 0.0001;
     private static final int PLACES = 4;
 
 
@@ -151,7 +157,6 @@ public class ChiCuadradoTestController {
         spnAmountOfNumbers.focusedProperty().addListener(getListenerForChangeValue(spnAmountOfNumbers));
         spnAlpha.setValueFactory(getDoubleValueFactory());
         spnAlpha.focusedProperty().addListener(getListenerForChangeValue(spnAlpha));
-
     }
 
     /**
@@ -165,26 +170,81 @@ public class ChiCuadradoTestController {
      * Metodo que contruye fabrica de valores para decimales.
      */
     private SpinnerValueFactory<Double> getDoubleValueFactory() {
-        return new SpinnerValueFactory.DoubleSpinnerValueFactory(SPINNER_DOUBLE_MIN_VALUE,
+        SpinnerValueFactory<Double> factory = new SpinnerValueFactory.DoubleSpinnerValueFactory(SPINNER_DOUBLE_MIN_VALUE,
                 SPINNER_DOUBLE_MAX_VALUE,
                 SPINNER_DOUBLE_INITIAL_VALUE,
                 SPINNER_DOUBLE_STEP_VALUE);
+
+        factory.setConverter(getStringDoubleConverter());
+        return factory;
+    }
+
+    private StringConverter<Double> getStringDoubleConverter() {
+        return new StringConverter<Double>() {
+            private final DecimalFormat df = new DecimalFormat("#.####");
+
+            @Override
+            public String toString(Double value) {
+                if (value == null) {
+                    return "";
+                }
+
+                return df.format(value);
+            }
+
+            @Override
+            public Double fromString(String value) {
+                try {
+                    if (value == null) {
+                        return SPINNER_DOUBLE_INITIAL_VALUE;
+                    }
+
+                    value = value.trim();
+
+                    if (value.length() < 1) {
+                        return SPINNER_DOUBLE_INITIAL_VALUE;
+                    }
+
+                    return df.parse(value).doubleValue();
+                } catch (ParseException ex) {
+                    return SPINNER_DOUBLE_INITIAL_VALUE;
+                }
+            }
+        };
     }
 
     /**
      * Metodo que genera un listener para perdida de focus, que se usa
      * para compensar el bug de JavaFX en setear el valor al spinner cuando
      * es editado.
-     *
-     * @param spinner
-     * @param <T>
-     * @return
      */
     private <T> ChangeListener<? super Boolean> getListenerForChangeValue(Spinner<T> spinner) {
         return (observable, oldValue, newValue) -> {
             if (!newValue) {
-                spinner.increment(SPINNER_NO_INCREMENT_STEP);
+
+                if (spinner.isEditable()) {
+
+                    String text = spinner.getEditor().getText();
+
+                    SpinnerValueFactory<T> valueFactory = spinner.getValueFactory();
+                    if (valueFactory != null) {
+                        StringConverter<T> converter = valueFactory.getConverter();
+                        if (converter != null) {
+                            T value = spinner.getValue();
+                            try {
+                                value = converter.fromString(text);
+                            } catch (Exception e){
+
+                            }
+                            finally {
+                                spinner.getValueFactory().setValue(value);
+                                spinner.getEditor().setText(value.toString());
+                            }
+                        }
+                    }
+                }
             }
+
         };
     }
 
@@ -199,7 +259,7 @@ public class ChiCuadradoTestController {
         } catch (IntervalNotDivisibleException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_NOT_DIVISIBLE, ButtonType.OK);
             alert.showAndWait();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_ERROR, ButtonType.OK);
             alert.showAndWait();
         }
@@ -261,12 +321,11 @@ public class ChiCuadradoTestController {
     /**
      * Metodo que obtiene el correspondiente valor de la tabla de
      * chi cuadrado en funcion de los parametros ingresados.
-     * @return
      */
     private double getChiSquaredTableValueFromParameters() {
         int degreesOfFreedom = spnAmountOfIntervals.getValue() - 1;
         double alpha = spnAlpha.getValue();
-        return new ChiSquaredDistribution(degreesOfFreedom).inverseCumulativeProbability(alpha);
+        return new ChiSquaredDistribution(degreesOfFreedom).inverseCumulativeProbability(1 - alpha);
 
     }
 
@@ -287,33 +346,20 @@ public class ChiCuadradoTestController {
         int amountOfNumbers = spnAmountOfNumbers.getValue();
         int amountOfIntervals = spnAmountOfIntervals.getValue();
 
-        IntervalsCreator.GeneratorType generatorType = getTypeFromComboBox();
+        RandomGenerator generator = getGenerator();
 
-        return buildIntervalsCreator(amountOfNumbers, amountOfIntervals, generatorType);
+        return IntervalsCreator.createFor(amountOfNumbers, amountOfIntervals, generator);
 
-    }
-
-    /**
-     * Metodo que crea una instancia de IntervalsCreator con los valores
-     * pasados por parametro.
-     */
-    private IntervalsCreator buildIntervalsCreator(int amountOfNumbers,
-                                                   int amountOfIntervals,
-                                                   IntervalsCreator.GeneratorType type) throws IntervalNotDivisibleException {
-
-        return IntervalsCreator.createFor(amountOfNumbers, amountOfIntervals, type);
     }
 
     /**
      * Metodo que transforma lo seleccionado en el combobox de tipo
-     * de generador en el valor GeneratorType correspondiente.
+     * de generador en el Generador correspondiente.
      */
-    private IntervalsCreator.GeneratorType getTypeFromComboBox() {
+    private RandomGenerator getGenerator() {
         if (cmbGenerador.getSelectionModel().getSelectedItem().equals(COMBO_BOX_JAVA_NATIVE)) {
-            return IntervalsCreator.GeneratorType.JAVA_NATIVE;
+            return JavaGenerator.defaultJava();
         }
-        return IntervalsCreator.GeneratorType.CONGRUENTIAL;
+        return CongruentialGenerator.defaultMixed();
     }
-
-
 }
