@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,6 +48,17 @@ public class MainMenuController {
     }
 
     /**
+     * Metodo que maneja el evento de click sobre
+     * la opcion de volver a pantalla de info.
+     *
+     * @param event
+     */
+    @FXML
+    void openEssayInfoDialog(ActionEvent event) {
+        setEssayInfoDialog();
+    }
+
+    /**
      * Accion de setear la vista de la lista de
      * generacion de numeros aleatorios al
      * panel principal
@@ -72,4 +82,12 @@ public class MainMenuController {
             logger.error("Problem opening chi cuadrado.", e);
         }
     }
+    private void setEssayInfoDialog() {
+        try {
+            mainPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/essay-info.fxml")));
+        } catch (IOException e) {
+            logger.error("Problem opening main menu.", e);
+        }
+    }
+
 }
