@@ -41,7 +41,7 @@ public class ChiCuadradoTestController {
     private static final String TABLE_VIEW_INTERVAL_COLUMN_TITLE = "Intervalo";
     private static final String TABLE_VIEW_EXPECTED_FREQUENCY_COLUMN_LABEL = "FE";
     private static final String TABLE_VIEW_OBSERVED_FREQUENCY_COLUMN_LABEL = "FO";
-    private static final String TABLE_VIEW_RESULT_COLUMN_LABEL = "(FE-FO)^2/2";
+    private static final String TABLE_VIEW_RESULT_COLUMN_LABEL = "(FE-FO)^2/FE";
     private static final String HO_ACCEPTED = "NO RECHAZADA";
     private static final String HO_REJECTED = "RECHAZADA";
     private static final String COMBO_BOX_JAVA_NATIVE = "Nativo (Java)";
