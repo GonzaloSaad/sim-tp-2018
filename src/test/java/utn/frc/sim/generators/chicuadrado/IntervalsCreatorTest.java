@@ -12,7 +12,6 @@ public class IntervalsCreatorTest {
     private IntervalsCreator creator;
     private static final int NUMBERS = 400;
     private static final int NUMBERS_FOR_FAIL = 401;
-
     private static final int INTERVALS = 20;
 
 
