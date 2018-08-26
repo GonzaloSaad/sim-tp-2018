@@ -8,7 +8,6 @@ import java.util.List;
 public class JavaGenerator implements RandomGenerator {
 
     private JavaGenerator() {
-
     }
 
     public static JavaGenerator defaultJava() {
