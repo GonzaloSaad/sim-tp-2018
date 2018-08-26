@@ -30,8 +30,21 @@ public class CongruentialGenerator implements Congruential {
      * Metodo que instancia a la clase con los valores necesarios.
      * Patron factory method.
      */
-    public static CongruentialGenerator createOf(int a, int m, int c, int seed) {
+    public static CongruentialGenerator createOf(int a, int m, int c, int seed) throws CongruentialValuesNotValidException {
+        if (!validateValuesForGenerator(a, m, c, seed)){
+            throw new CongruentialValuesNotValidException();
+        }
         return new CongruentialGenerator(a, m, c, seed);
+    }
+
+    /**
+     * Metodo que valida los valores del generador.
+     */
+    private static boolean validateValuesForGenerator(int a, int m, int c, int seed){
+        return m > 0 &&
+                a > 0 && a < m &&
+                c >= 0 && c < m &&
+                seed >= 0 && c < m;
     }
 
     /**

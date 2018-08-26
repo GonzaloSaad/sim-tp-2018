@@ -36,10 +36,11 @@ public class CongruentialGeneratorTest {
     private static final int SEED = 1;
     private static final int MIXED_C = 3;
     private static final int MULTIPLICATIVE_C = 0;
+    private static final int MIXED_C_FAILED = 1000;
 
 
     @Test
-    public void mixedGeneration() {
+    public void mixedGeneration() throws CongruentialValuesNotValidException {
         Congruential generator = CongruentialGenerator.createOf(A, M, MIXED_C, SEED);
 
         assertTrue(generator.isMixed());
@@ -51,7 +52,7 @@ public class CongruentialGeneratorTest {
     }
 
     @Test
-    public void multiplicativeGeneration() {
+    public void multiplicativeGeneration() throws CongruentialValuesNotValidException {
         Congruential generator = CongruentialGenerator.createOf(A, M, MULTIPLICATIVE_C, SEED);
 
         assertFalse(generator.isMixed());
@@ -61,6 +62,11 @@ public class CongruentialGeneratorTest {
         List<Integer> expected = Arrays.asList(multiplicative);
         assertEquals(numbers, expected);
 
+    }
+
+    @Test(expected = CongruentialValuesNotValidException.class)
+    public void mixedGenerationWithException() throws CongruentialValuesNotValidException {
+        CongruentialGenerator.createOf(A, M, MIXED_C_FAILED, SEED);
     }
 
 

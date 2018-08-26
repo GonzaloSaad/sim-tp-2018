@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import utn.frc.sim.generators.RandomGenerator;
 import utn.frc.sim.generators.congruential.Congruential;
 import utn.frc.sim.generators.congruential.CongruentialGenerator;
+import utn.frc.sim.generators.congruential.CongruentialValuesNotValidException;
 import utn.frc.sim.util.MathUtils;
 
 import java.util.List;
@@ -20,10 +21,12 @@ import java.util.stream.Collectors;
  */
 public class ListGeneratorController {
 
+    private static final String ALERT_VALUES_NOT_VALID = "Los valores ingresados del generador no son validos.";
     private static RandomGenerator generator;
     private static Logger logger = LogManager.getLogger(ListGeneratorController.class);
     private static final int SPINNER_INTEGER_MIN_VALUE = 0;
     private static final int SPINNER_INTEGER_M_MIN_VALUE = 1;
+    private static final int SPINNER_INTEGER_M_DEFAULT_VALUE = 2;
     private static final int SPINNER_INTEGER_DEFAULT_VALUE = 1;
     private static final int SPINNER_INTEGER_MAX_VALUE = Integer.MAX_VALUE;
     private static final int SPINNER_NO_INCREMENT_STEP = 0;
@@ -130,6 +133,9 @@ public class ListGeneratorController {
     void btnAgregarClick(ActionEvent event) {
         try {
             generateNumberAndAddToList();
+        } catch (CongruentialValuesNotValidException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_VALUES_NOT_VALID, ButtonType.OK);
+            alert.showAndWait();
         } catch (Exception e) {
             logger.error("Error during add.", e);
         }
@@ -142,7 +148,11 @@ public class ListGeneratorController {
     void btnGenerarClick(ActionEvent event) {
         try {
             generateNumbersAndSetToList();
-        } catch (Exception e) {
+        } catch (CongruentialValuesNotValidException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, ALERT_VALUES_NOT_VALID, ButtonType.OK);
+            alert.showAndWait();
+        } catch
+                (Exception e) {
             logger.error("Error during generation.", e);
         }
     }
@@ -171,7 +181,7 @@ public class ListGeneratorController {
      * pseudoaleatorio con los parametros especificados
      * y agregarlo a la lista.
      */
-    private void generateNumberAndAddToList() {
+    private void generateNumberAndAddToList() throws CongruentialValuesNotValidException {
         addNumberForListView(MathUtils.round(getGenerator().random(), 4));
     }
 
@@ -180,7 +190,7 @@ public class ListGeneratorController {
      * default de numeros pseudoaleatorios y agregarlos a
      * la lista.
      */
-    private void generateNumbersAndSetToList() {
+    private void generateNumbersAndSetToList() throws CongruentialValuesNotValidException {
         createGenerator();
         RandomGenerator generator = getGenerator();
 
@@ -235,7 +245,7 @@ public class ListGeneratorController {
      * Si el checkbox default esta selecto, lo crea con
      * la configuracion por defecto del generador congruencial.
      */
-    private void createGenerator() {
+    private void createGenerator() throws CongruentialValuesNotValidException {
         if (chkDefault.isSelected()) {
             generator = CongruentialGenerator.defaultMixed();
         } else {
@@ -250,7 +260,7 @@ public class ListGeneratorController {
     /**
      * Metodo que setea el generador para uso de clase.
      */
-    private RandomGenerator getGenerator() {
+    private RandomGenerator getGenerator() throws CongruentialValuesNotValidException {
         if (generator == null) {
             createGenerator();
         }
@@ -271,7 +281,7 @@ public class ListGeneratorController {
     private void setDefaultValuesToSpinner() {
         setValueToSpinner(spnA, SPINNER_INTEGER_DEFAULT_VALUE);
         setValueToSpinner(spnC, SPINNER_INTEGER_DEFAULT_VALUE);
-        setValueToSpinner(spnM, SPINNER_INTEGER_DEFAULT_VALUE);
+        setValueToSpinner(spnM, SPINNER_INTEGER_M_DEFAULT_VALUE);
         setValueToSpinner(spnSeed, SPINNER_INTEGER_DEFAULT_VALUE);
     }
 
