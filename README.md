@@ -28,7 +28,7 @@ mvn clean install
 
 ### Ejecutar el programa
 
-En la carpeta `./target` existe un jar 
+En la carpeta `./target` existe un jar  
 ejecutable llamado `sim-2018-1.0.jar`. Hacer doble click sobre el archivo.
 
 
