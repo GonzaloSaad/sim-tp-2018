@@ -42,9 +42,9 @@ public class CongruentialGenerator implements Congruential {
      */
     private static boolean validateValuesForGenerator(int a, int m, int c, int seed){
         return m > 0 &&
-                a > 0 && a < m &&
-                c >= 0 && c < m &&
-                seed >= 0 && c < m;
+                a >= 1 && a <= m &&
+                c >= 0 && c <= m &&
+                seed >= 0 && seed < m;
     }
 
     /**
